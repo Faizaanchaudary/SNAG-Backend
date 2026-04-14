@@ -1,0 +1,5 @@
+address,state,country,branchAddress,locationType,lat,lng,phoneNumber,email,contactName
+123 Main Street,California,USA,Ground Floor Main Branch,main,37.7749,-122.4194,+1-555-0101,main@example.com,John Smith
+456 Oak Avenue,New York,USA,Shop 2 Oak Plaza,franchise,40.7128,-74.0060,+1-555-0102,oak@example.com,Jane Doe
+789 Pine Road,Texas,USA,Unit 5 Pine Mall,franchise,29.7604,-95.3698,+1-555-0103,pine@example.com,Bob Johnson
+321 Elm Street,Florida,USA,Level 1 Elm Center,franchise,25.7617,-80.1918,+1-555-0104,elm@example.com,Alice Brown

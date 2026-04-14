@@ -1,0 +1,40 @@
+import { Router } from 'express';
+import healthRouter from '@health/health.routes.js';
+import authRouter from '@modules/auth/auth.routes.js';
+import merchantOnboardingRouter from '@modules/merchant/onboarding/onboarding.routes.js';
+import merchantOffersRouter from '@modules/merchant/offers/offers.routes.js';
+import merchantAnalyticsRouter from '@modules/merchant/analytics/analytics.routes.js';
+import merchantSettingsRouter from '@modules/merchant/settings/settings.routes.js';
+import merchantRatingRouter from '@modules/merchant/rating/rating.routes.js';
+import clientOnboardingRouter from '@modules/client/onboarding/onboarding.routes.js';
+import clientOffersRouter from '@modules/client/offers/offers.routes.js';
+import clientProfileRouter from '@modules/client/profile/profile.routes.js';
+import clientFeedbackRouter from '@modules/client/feedback/feedback.routes.js';
+import clientScorecardRouter from '@modules/client/scorecard/scorecard.routes.js';
+import clientSupportRouter from '@modules/client/support/support.routes.js';
+import clientShippingAddressesRouter from '@modules/client/shipping-addresses/shipping-addresses.routes.js';
+import clientPreferencesRouter from '@modules/client/preferences/preferences.routes.js';
+import notificationsRouter from '@modules/notifications/notifications.routes.js';
+import industriesRouter from '@modules/industries/industries.routes.js';
+
+const router = Router();
+
+router.use('/health',                healthRouter);
+router.use('/auth',                  authRouter);
+router.use('/merchant/onboarding',   merchantOnboardingRouter);
+router.use('/merchant/offers',       merchantOffersRouter);
+router.use('/merchant/analytics',    merchantAnalyticsRouter);
+router.use('/merchant/settings',     merchantSettingsRouter);
+router.use('/merchant/rating',       merchantRatingRouter);
+router.use('/client/onboarding',     clientOnboardingRouter);
+router.use('/client/offers',         clientOffersRouter);
+router.use('/client/profile',        clientProfileRouter);
+router.use('/client/feedback',       clientFeedbackRouter);
+router.use('/client/scorecard',      clientScorecardRouter);
+router.use('/client/support',        clientSupportRouter);
+router.use('/client/shipping-addresses', clientShippingAddressesRouter);
+router.use('/client/preferences',    clientPreferencesRouter);
+router.use('/notifications',         notificationsRouter);
+router.use('/industries',            industriesRouter);
+
+export default router;

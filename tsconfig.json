@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "typeRoots": ["./src/core/types", "./node_modules/@types"],
+    "paths": {
+      "@core/*":       ["src/core/*"],
+      "@modules/*":    ["src/modules/*"],
+      "@config/*":     ["src/config/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@common/*":     ["src/common/*"],
+      "@models/*":     ["src/models/*"],
+      "@health/*":     ["src/health/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
