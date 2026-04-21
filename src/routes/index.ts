@@ -16,6 +16,21 @@ import clientShippingAddressesRouter from '@modules/client/shipping-addresses/sh
 import clientPreferencesRouter from '@modules/client/preferences/preferences.routes.js';
 import notificationsRouter from '@modules/notifications/notifications.routes.js';
 import industriesRouter from '@modules/industries/industries.routes.js';
+import adminDashboardRouter from '@modules/admin/dashboard/dashboard.routes.js';
+import adminUsersRouter from '@modules/admin/users/users.routes.js';
+import adminRetailersRouter from '@modules/admin/retailers/retailers.routes.js';
+import adminDealsRouter from '@modules/admin/deals/deals.routes.js';
+import adminAnalyticsRouter from '@modules/admin/analytics/analytics.routes.js';
+import adminReportsRouter from '@modules/admin/reports/reports.routes.js';
+import adminSettingsRouter from '@modules/admin/settings/settings.routes.js';
+import adminInvitesRouter from '@modules/admin/invites/invites.routes.js';
+import adminAuditRouter from '@modules/admin/audit/audit.routes.js';
+import adminRedemptionsRouter from '@modules/admin/redemptions/redemptions.routes.js';
+import adminImportsRouter from '@modules/admin/imports/imports.routes.js';
+import retailerDashboardRouter from '@modules/retailer/dashboard/dashboard.routes.js';
+import retailerOffersRouter from '@modules/retailer/offers/offers.routes.js';
+import retailerStoresRouter from '@modules/retailer/stores/stores.routes.js';
+import retailerProfileRouter from '@modules/retailer/profile/profile.routes.js';
 
 const router = Router();
 
@@ -36,5 +51,22 @@ router.use('/client/shipping-addresses', clientShippingAddressesRouter);
 router.use('/client/preferences',    clientPreferencesRouter);
 router.use('/notifications',         notificationsRouter);
 router.use('/industries',            industriesRouter);
+router.use('/admin/dashboard',       adminDashboardRouter);
+router.use('/admin/users',           adminUsersRouter);
+router.use('/admin/retailers',       adminRetailersRouter);
+router.use('/admin/deals',           adminDealsRouter);
+router.use('/admin/analytics',       adminAnalyticsRouter);
+router.use('/admin/reports',         adminReportsRouter);
+router.use('/admin/settings',        adminSettingsRouter);
+router.use('/admin/invites',         adminInvitesRouter);
+router.use('/admin/audit',           adminAuditRouter);
+router.use('/admin/redemptions',     adminRedemptionsRouter);
+router.use('/admin/imports',         adminImportsRouter);
+
+// ── Retailer routes ───────────────────────────────────────────────────────────
+router.use('/retailer/dashboard',    retailerDashboardRouter);
+router.use('/retailer/offers',       retailerOffersRouter);
+router.use('/retailer/stores',       retailerStoresRouter);
+router.use('/retailer/profile',      retailerProfileRouter);
 
 export default router;

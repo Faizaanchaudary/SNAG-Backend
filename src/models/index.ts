@@ -7,3 +7,4 @@ export { SavedOffer } from './saved-offer.model.js';
 export { Redemption } from './redemption.model.js';
 export { Feedback } from './feedback.model.js';
 export { SupportTicket } from './support-ticket.model.js';
+export { PlatformSettings } from './platform-settings.model.js';

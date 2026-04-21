@@ -54,9 +54,6 @@ const merchantSettingsSchema = new Schema<MerchantSettingsDocument>(
   { timestamps: true }
 );
 
-// Index for faster lookups
-merchantSettingsSchema.index({ merchant: 1 });
-
 export const MerchantSettings = mongoose.model<MerchantSettingsDocument>(
   'MerchantSettings',
   merchantSettingsSchema

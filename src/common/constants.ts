@@ -1,6 +1,8 @@
 export const USER_ROLES = {
+  ADMIN: 'admin',
   MERCHANT: 'merchant',
   CLIENT: 'client',
+  RETAILER: 'retailer',
 } as const;
 
 export const MERCHANT_ONBOARDING_STEPS = {

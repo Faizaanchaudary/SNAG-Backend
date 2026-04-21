@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as authService from './auth.service.js';
 import { sendSuccess } from '@core/http/response.js';
+import { auditLogin } from '@middleware/audit.js';
 
 export const merchantRegister = async (req: Request, res: Response): Promise<void> => {
   const result = await authService.merchantRegister(req.body);
@@ -23,8 +24,18 @@ export const resendCode = async (req: Request, res: Response): Promise<void> => 
 };
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  const result = await authService.login(req.body);
-  sendSuccess(res, result, 'Login successful');
+  try {
+    const result = await authService.login(req.body);
+    
+    // Log successful login
+    await auditLogin(req, result.user.id, true);
+    
+    sendSuccess(res, result, 'Login successful');
+  } catch (error) {
+    // Log failed login attempt
+    await auditLogin(req, undefined, false);
+    throw error; // Re-throw to be handled by error middleware
+  }
 };
 
 export const forgotPassword = async (req: Request, res: Response): Promise<void> => {

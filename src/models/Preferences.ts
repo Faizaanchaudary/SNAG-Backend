@@ -24,7 +24,6 @@ const PreferencesSchema = new Schema<IPreferences>(
       ref: 'User',
       required: true,
       unique: true,
-      index: true,
     },
     notifications: {
       email: { type: Boolean, default: true },
