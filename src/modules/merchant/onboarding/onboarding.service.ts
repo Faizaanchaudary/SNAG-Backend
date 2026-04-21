@@ -29,6 +29,7 @@ export const saveBranchProfile = async (
   merchantId: string,
   dto: BranchProfileDto,
   logoFile?: Express.Multer.File,
+  updateStep: boolean = true, // New parameter - defaults to true for backward compatibility
 ) => {
   const logoUrl = logoFile
     ? await uploadToCloudinary(logoFile, 'snag/logos')
@@ -36,10 +37,13 @@ export const saveBranchProfile = async (
 
   const profile = await onboardingRepository.upsertBranchProfile(merchantId, { ...dto, logoUrl });
 
-  await onboardingRepository.updateOnboardingStep(
-    merchantId,
-    MERCHANT_ONBOARDING_STEPS.BRANCH_PROFILE,
-  );
+  // Only update onboarding step if explicitly requested (during onboarding, not settings edit)
+  if (updateStep) {
+    await onboardingRepository.updateOnboardingStep(
+      merchantId,
+      MERCHANT_ONBOARDING_STEPS.BRANCH_PROFILE,
+    );
+  }
 
   return profile;
 };

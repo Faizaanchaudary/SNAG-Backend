@@ -10,10 +10,14 @@ export const saveBranchProfile = async (req: Request, res: Response): Promise<vo
   console.log('🔵 Body:', req.body);
   console.log('🔵 File:', req.file ? req.file.filename : 'No file');
   
+  // Only update onboarding step for POST (onboarding), not PATCH (settings edit)
+  const shouldUpdateStep = req.method === 'POST';
+  
   const result = await onboardingService.saveBranchProfile(
     req.user!.id,
     req.body,
     req.file,
+    shouldUpdateStep,
   );
   
   console.log('✅ [BACKEND] saveBranchProfile result:', result);
