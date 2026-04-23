@@ -18,6 +18,8 @@ import {
   NotFoundError,
 } from '@core/errors/app-error.js';
 import { toUserResponse } from '@common/mappers/user.mapper.js';
+import { User } from '@models/user.model.js';
+import { createNotification } from '@modules/notifications/notifications.service.js';
 import type {
   MerchantRegisterDto,
   ClientRegisterDto,
@@ -66,7 +68,7 @@ export const merchantRegister = async (dto: MerchantRegisterDto) => {
 
   const hashed = await hashPassword(dto.password);
 
-  await authRepository.createUser({
+  const newUser = await authRepository.createUser({
     firstName:   dto.firstName,
     lastName:    dto.lastName,
     email:       dto.email,
@@ -76,6 +78,24 @@ export const merchantRegister = async (dto: MerchantRegisterDto) => {
   });
 
   await sendOtp(dto.email);
+
+  // Notify all retailers about the new merchant account (non-blocking)
+  User.find({ role: USER_ROLES.RETAILER, isDeleted: false }).select('_id').lean()
+    .then((retailers) => {
+      const promises = retailers.map((r) =>
+        createNotification({
+          userId:   r._id.toString(),
+          userType: 'retailer',
+          type:     'merchant_action',
+          title:    'New Merchant Registered',
+          message:  `${dto.firstName} ${dto.lastName} (${dto.email}) just created a merchant account.`,
+          metadata: { merchantId: (newUser as any)._id?.toString(), action: 'registered' },
+        }).catch(() => {}),
+      );
+      return Promise.all(promises);
+    })
+    .catch(() => {});
+
   return { message: 'Verification code sent to your email' };
 };
 

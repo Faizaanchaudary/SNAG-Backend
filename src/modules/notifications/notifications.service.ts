@@ -49,8 +49,8 @@ export const getUnreadCount = async (userId: string): Promise<number> => {
 // Helper function to create notifications (used by other modules)
 export const createNotification = async (data: {
   userId: string;
-  userType: 'merchant' | 'client';
-  type: 'offer' | 'redemption' | 'system';
+  userType: 'merchant' | 'client' | 'retailer';
+  type: 'offer' | 'redemption' | 'system' | 'merchant_action';
   title: string;
   message: string;
   metadata?: any;

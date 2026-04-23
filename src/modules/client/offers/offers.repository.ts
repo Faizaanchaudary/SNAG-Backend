@@ -102,6 +102,12 @@ export const createRedemption = (
 export const incrementOfferRedemptions = (offerId: string) =>
   Offer.findByIdAndUpdate(offerId, { $inc: { 'stats.redemptions': 1 } }).exec();
 
+export const incrementOfferViews = (offerId: string) =>
+  Offer.findByIdAndUpdate(offerId, { $inc: { 'stats.views': 1 } }).exec();
+
+export const incrementOfferClicks = (offerId: string) =>
+  Offer.findByIdAndUpdate(offerId, { $inc: { 'stats.clicks': 1 } }).exec();
+
 export const countRedemptionsForOffer = (offerId: string): Promise<number> =>
   Redemption.countDocuments({ offer: new mongoose.Types.ObjectId(offerId) }).exec();
 

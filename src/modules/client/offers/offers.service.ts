@@ -119,6 +119,12 @@ export const getOfferById = async (clientId: string, offerId: string) => {
   const offer = await offersRepository.findOfferById(offerId);
   if (!offer) throw new NotFoundError('Offer not found');
 
+  // Increment both view and click count when offer is opened/viewed
+  await Promise.all([
+    offersRepository.incrementOfferViews(offerId),
+    offersRepository.incrementOfferClicks(offerId)
+  ]);
+
   const profile = await BranchProfile.findOne({ merchant: offer.merchant.toString() })
     .select('branchName logoUrl')
     .lean()
@@ -142,6 +148,7 @@ export const getOfferById = async (clientId: string, offerId: string) => {
 export const saveOffer = async (clientId: string, offerId: string) => {
   const offer = await offersRepository.findOfferById(offerId);
   if (!offer) throw new NotFoundError('Offer not found');
+  
   await offersRepository.saveOffer(clientId, offerId);
   return { saved: true };
 };
@@ -234,6 +241,18 @@ export const snagOffer = async (clientId: string, offerId: string) => {
     barCodeUrl:   offer.barCodeUrl,
     redeemedAt:   redemption.redeemedAt,
   };
+};
+
+// ── Click Tracking ────────────────────────────────────────────────────────────
+
+export const clickOffer = async (clientId: string, offerId: string) => {
+  const offer = await offersRepository.findOfferById(offerId);
+  if (!offer) throw new NotFoundError('Offer not found');
+
+  // Increment click count
+  await offersRepository.incrementOfferClicks(offerId);
+
+  return { clicked: true, offerId };
 };
 
 // ── My Offers (redemption history) ───────────────────────────────────────────

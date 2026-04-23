@@ -13,8 +13,8 @@ interface PaginatedResult {
 
 export const create = async (data: {
   userId: string;
-  userType: 'merchant' | 'client';
-  type: 'offer' | 'redemption' | 'system';
+  userType: 'merchant' | 'client' | 'retailer';
+  type: 'offer' | 'redemption' | 'system' | 'merchant_action';
   title: string;
   message: string;
   metadata?: any;

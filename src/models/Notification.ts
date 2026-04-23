@@ -2,8 +2,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface INotification extends Document {
   userId: mongoose.Types.ObjectId;
-  userType: 'merchant' | 'client';
-  type: 'offer' | 'redemption' | 'system';
+  userType: 'merchant' | 'client' | 'retailer';
+  type: 'offer' | 'redemption' | 'system' | 'merchant_action';
   title: string;
   message: string;
   read: boolean;
@@ -26,12 +26,12 @@ const NotificationSchema = new Schema<INotification>(
     },
     userType: {
       type: String,
-      enum: ['merchant', 'client'],
+      enum: ['merchant', 'client', 'retailer'],
       required: true,
     },
     type: {
       type: String,
-      enum: ['offer', 'redemption', 'system'],
+      enum: ['offer', 'redemption', 'system', 'merchant_action'],
       required: true,
       index: true,
     },

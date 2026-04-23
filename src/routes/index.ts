@@ -30,6 +30,14 @@ import adminImportsRouter from '@modules/admin/imports/imports.routes.js';
 import retailerDashboardRouter from '@modules/retailer/dashboard/dashboard.routes.js';
 import retailerOffersRouter from '@modules/retailer/offers/offers.routes.js';
 import retailerStoresRouter from '@modules/retailer/stores/stores.routes.js';
+import retailerMerchantsRouter from '@modules/retailer/merchants/merchants.routes.js';
+import retailerBranchesRouter from '@modules/retailer/branches/branches.routes.js';
+import retailerBrandAssetsRouter from '@modules/retailer/brand-assets/brand-assets.routes.js';
+import retailerTemplatesRouter from '@modules/retailer/templates/templates.routes.js';
+import retailerAudienceRouter from '@modules/retailer/audience/audience.routes.js';
+import retailerPromotionLimitsRouter from '@modules/retailer/promotion-limits/promotion-limits.routes.js';
+import retailerLegalRouter from '@modules/retailer/legal/legal.routes.js';
+
 import retailerProfileRouter from '@modules/retailer/profile/profile.routes.js';
 
 const router = Router();
@@ -65,6 +73,13 @@ router.use('/admin/imports',         adminImportsRouter);
 
 // ── Retailer routes ───────────────────────────────────────────────────────────
 router.use('/retailer/dashboard',    retailerDashboardRouter);
+router.use('/retailer/merchants',    retailerMerchantsRouter);
+router.use('/retailer/branches',     retailerBranchesRouter);
+router.use('/retailer/brand-assets', retailerBrandAssetsRouter);
+router.use('/retailer/templates',    retailerTemplatesRouter);
+router.use('/retailer/audience',          retailerAudienceRouter);
+router.use('/retailer/promotion-limits',  retailerPromotionLimitsRouter);
+router.use('/retailer/legal',             retailerLegalRouter);
 router.use('/retailer/offers',       retailerOffersRouter);
 router.use('/retailer/stores',       retailerStoresRouter);
 router.use('/retailer/profile',      retailerProfileRouter);

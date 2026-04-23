@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const notificationFilterSchema = z.object({
-  type: z.enum(['offer', 'redemption', 'system', 'all']).optional(),
+  type: z.enum(['offer', 'redemption', 'system', 'merchant_action', 'all']).optional(),
   read: z.coerce.boolean().optional(),
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(20),

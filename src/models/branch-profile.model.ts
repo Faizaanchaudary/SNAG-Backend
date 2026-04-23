@@ -9,6 +9,7 @@ export interface IBranchProfile {
   industry: string;
   subCategories: string[];
   role?: string;
+  isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,6 +26,7 @@ const branchProfileSchema = new Schema<BranchProfileDocument>(
     industry:      { type: String, required: true },
     subCategories: { type: [String], default: [] },
     role:          { type: String },
+    isDeleted:     { type: Boolean, default: false },
   },
   { timestamps: true },
 );

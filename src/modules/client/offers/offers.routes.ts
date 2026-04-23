@@ -22,4 +22,7 @@ router.delete('/:id/save', offersController.unsaveOffer);
 // Snag
 router.post('/:id/snag', offersController.snagOffer);
 
+// Click tracking
+router.post('/:id/click', offersController.clickOffer);
+
 export default router;

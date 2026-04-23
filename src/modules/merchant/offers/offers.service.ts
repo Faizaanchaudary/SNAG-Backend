@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 
 import { cloudinary } from '@config/cloudinary.js';
 import { NotFoundError } from '@core/errors/app-error.js';
+import { User } from '@models/user.model.js';
+import { USER_ROLES } from '@common/constants.js';
+import { createNotification } from '@modules/notifications/notifications.service.js';
 
 import * as offersRepository from './offers.repository.js';
 import type {
@@ -27,6 +30,26 @@ const uploadToCloudinary = async (
     stream.end(file.buffer);
   });
   return result.secure_url;
+};
+
+/** Notify all retailers — fire and forget */
+const notifyAllRetailers = (title: string, message: string, metadata?: any): void => {
+  User.find({ role: USER_ROLES.RETAILER, isDeleted: false }).select('_id').lean()
+    .then((retailers) =>
+      Promise.all(
+        retailers.map((r) =>
+          createNotification({
+            userId:   r._id.toString(),
+            userType: 'retailer',
+            type:     'merchant_action',
+            title,
+            message,
+            metadata,
+          }).catch(() => {}),
+        ),
+      ),
+    )
+    .catch(() => {});
 };
 
 // ── Tab 1: Basic Info ─────────────────────────────────────────────────────────
@@ -61,7 +84,15 @@ export const createOffer = async (
     ? await uploadToCloudinary(bannerFile, 'snag/offers/banners')
     : undefined;
 
-  return offersRepository.createOffer(merchantId, { ...dto, bannerUrl });
+  const offer = await offersRepository.createOffer(merchantId, { ...dto, bannerUrl });
+
+  notifyAllRetailers(
+    'New Offer Created',
+    `A merchant created a new offer: "${dto.title}".`,
+    { merchantId, offerId: (offer as any)._id?.toString(), action: 'offer_created' },
+  );
+
+  return offer;
 };
 
 // ── Tab 2: Scan Info ──────────────────────────────────────────────────────────

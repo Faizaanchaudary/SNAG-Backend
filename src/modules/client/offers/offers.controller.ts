@@ -27,6 +27,11 @@ export const snagOffer = async (req: Request, res: Response): Promise<void> => {
   sendSuccess(res, result, 'Offer snagged!', 201);
 };
 
+export const clickOffer = async (req: Request, res: Response): Promise<void> => {
+  const result = await offersService.clickOffer(req.user!.id, req.params['id'] as string);
+  sendSuccess(res, result, 'Click tracked');
+};
+
 export const getMyOffers = async (req: Request, res: Response): Promise<void> => {
   const offers = await offersService.getMyOffers(req.user!.id, req.query as any);
   sendSuccess(res, offers);

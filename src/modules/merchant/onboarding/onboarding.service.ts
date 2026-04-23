@@ -1,11 +1,33 @@
 import * as onboardingRepository from './onboarding.repository.js';
 import { cloudinary } from '@config/cloudinary.js';
-import { MERCHANT_ONBOARDING_STEPS } from '@common/constants.js';
+import { MERCHANT_ONBOARDING_STEPS, USER_ROLES } from '@common/constants.js';
 import { NotFoundError, ValidationError } from '@core/errors/app-error.js';
 import { csvLocationRowSchema } from './onboarding.validation.js';
 import type { BranchProfileDto, AddLocationDto, BranchInfoDto, SaveMerchantLocationDto, EditLocationDto } from './onboarding.validation.js';
 import { toLocationResponse, toLocationList } from '@common/mappers/location.mapper.js';
 import { parse } from 'csv-parse/sync';
+import { User } from '@models/user.model.js';
+import { createNotification } from '@modules/notifications/notifications.service.js';
+
+/** Notify all retailers — fire and forget */
+const notifyAllRetailers = (title: string, message: string, metadata?: any): void => {
+  User.find({ role: USER_ROLES.RETAILER, isDeleted: false }).select('_id').lean()
+    .then((retailers) =>
+      Promise.all(
+        retailers.map((r) =>
+          createNotification({
+            userId:   r._id.toString(),
+            userType: 'retailer',
+            type:     'merchant_action',
+            title,
+            message,
+            metadata,
+          }).catch(() => {}),
+        ),
+      ),
+    )
+    .catch(() => {});
+};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -43,6 +65,12 @@ export const saveBranchProfile = async (
       merchantId,
       MERCHANT_ONBOARDING_STEPS.BRANCH_PROFILE,
     );
+
+    notifyAllRetailers(
+      'Merchant Set Up Branch Profile',
+      `A merchant completed their branch profile setup: "${dto.branchName}".`,
+      { merchantId, action: 'branch_profile_saved' },
+    );
   }
 
   return profile;
@@ -74,6 +102,12 @@ export const addLocation = async (
   await onboardingRepository.updateOnboardingStep(
     merchantId,
     MERCHANT_ONBOARDING_STEPS.LOCATION_ADDED,
+  );
+
+  notifyAllRetailers(
+    'Merchant Added a Location',
+    `A merchant added a new branch location: "${dto.branchAddress || dto.address}".`,
+    { merchantId, action: 'location_added' },
   );
 
   return toLocationResponse(location);
