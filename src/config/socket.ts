@@ -2,17 +2,14 @@ import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { verifyAccessToken } from '@core/auth/jwt.js';
 import { config } from './index.js';
+import { createSocketIoCorsOptions } from './cors.js';
 import { logger } from './logger.js';
 
 let io: SocketIOServer | null = null;
 
 export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
   io = new SocketIOServer(httpServer, {
-    cors: {
-      origin: config.nodeEnv === 'production' ? false : '*',
-      methods: ['GET', 'POST'],
-      credentials: true,
-    },
+    cors: createSocketIoCorsOptions(config),
   });
 
   // Authentication middleware

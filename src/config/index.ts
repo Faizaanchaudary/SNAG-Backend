@@ -17,6 +17,19 @@ const schema = z.object({
   smtpPort:            z.coerce.number().default(587),
   smtpUser:            z.string().min(1),
   smtpPass:            z.string().min(1),
+  corsOrigins: z.preprocess((val) => {
+    if (typeof val !== 'string' || !val.trim()) return [];
+    return val.split(',').map((s) => s.trim()).filter(Boolean);
+  }, z.array(z.string().min(1))),
+}).superRefine((data, ctx) => {
+  if (data.nodeEnv === 'production' && data.corsOrigins.length === 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message:
+        'CORS_ORIGINS is required in production: comma-separated full origins (e.g. https://admin.example.com,https://retailer.example.com). Mobile native calls omit Origin and remain allowed.',
+      path: ['corsOrigins'],
+    });
+  }
 });
 
 export const config = schema.parse({
@@ -34,6 +47,7 @@ export const config = schema.parse({
   smtpPort:            process.env.SMTP_PORT,
   smtpUser:            process.env.SMTP_USER,
   smtpPass:            process.env.SMTP_PASS,
+  corsOrigins:         process.env.CORS_ORIGINS,
 });
 
 export type Config = typeof config;

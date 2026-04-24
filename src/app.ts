@@ -2,6 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { config } from '@config/index.js';
+import { createExpressCorsOptions } from '@config/cors.js';
 import { requestLogger } from '@middleware/request-logger.js';
 import { errorHandler } from '@middleware/error-handler.js';
 import router from './routes/index.js';
@@ -10,7 +11,7 @@ const app = express();
 
 // Security
 app.use(helmet());
-app.use(cors({ origin: config.nodeEnv === 'production' ? false : '*' }));
+app.use(cors(createExpressCorsOptions(config)));
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
