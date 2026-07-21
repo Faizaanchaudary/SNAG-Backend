@@ -20,6 +20,7 @@ import {
 import { toUserResponse } from '@common/mappers/user.mapper.js';
 import { User } from '@models/user.model.js';
 import { createNotification } from '@modules/notifications/notifications.service.js';
+import { logger } from '@config/logger.js';
 import type {
   MerchantRegisterDto,
   ClientRegisterDto,
@@ -64,7 +65,10 @@ const sendPasswordResetOtp = async (email: string): Promise<void> => {
 
 export const merchantRegister = async (dto: MerchantRegisterDto) => {
   const existing = await authRepository.findUserByEmail(dto.email);
-  if (existing) throw new ConflictError('Email already in use');
+  if (existing) {
+    logger.warn({ email: dto.email, isVerified: existing.isVerified }, 'merchantRegister: email already in use');
+    throw new ConflictError('Email already in use');
+  }
 
   const hashed = await hashPassword(dto.password);
 
@@ -103,7 +107,10 @@ export const merchantRegister = async (dto: MerchantRegisterDto) => {
 
 export const clientRegister = async (dto: ClientRegisterDto) => {
   const existing = await authRepository.findUserByEmail(dto.email);
-  if (existing) throw new ConflictError('Email already in use');
+  if (existing) {
+    logger.warn({ email: dto.email, isVerified: existing.isVerified }, 'clientRegister: email already in use');
+    throw new ConflictError('Email already in use');
+  }
 
   const hashed = await hashPassword(dto.password);
 
