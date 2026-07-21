@@ -20,7 +20,6 @@ import {
 import { toUserResponse } from '@common/mappers/user.mapper.js';
 import { User } from '@models/user.model.js';
 import { createNotification } from '@modules/notifications/notifications.service.js';
-import { logger } from '@config/logger.js';
 import type {
   MerchantRegisterDto,
   ClientRegisterDto,
@@ -52,8 +51,7 @@ const sendOtp = async (email: string): Promise<void> => {
   await authRepository.upsertOtp(email, code, expiresAt);
 
   // Fire-and-forget: don't let a slow/unreachable SMTP server hang the request.
-  sendMail(email, 'Your SNAG verification code', otpEmailTemplate(code, OTP_EXPIRY_MINUTES))
-    .catch((err) => logger.error({ email, err }, 'sendOtp: failed to send OTP email'));
+  sendMail(email, 'Your SNAG verification code', otpEmailTemplate(code, OTP_EXPIRY_MINUTES)).catch(() => {});
 };
 
 const sendPasswordResetOtp = async (email: string): Promise<void> => {
@@ -63,18 +61,14 @@ const sendPasswordResetOtp = async (email: string): Promise<void> => {
   await authRepository.upsertOtp(email, code, expiresAt);
 
   // Fire-and-forget: don't let a slow/unreachable SMTP server hang the request.
-  sendMail(email, 'Reset your SNAG password', passwordResetEmailTemplate(code, OTP_EXPIRY_MINUTES))
-    .catch((err) => logger.error({ email, err }, 'sendPasswordResetOtp: failed to send reset email'));
+  sendMail(email, 'Reset your SNAG password', passwordResetEmailTemplate(code, OTP_EXPIRY_MINUTES)).catch(() => {});
 };
 
 // ── Merchant Auth ─────────────────────────────────────────────────────────────
 
 export const merchantRegister = async (dto: MerchantRegisterDto) => {
   const existing = await authRepository.findUserByEmail(dto.email);
-  if (existing) {
-    logger.warn({ email: dto.email, isVerified: existing.isVerified }, 'merchantRegister: email already in use');
-    throw new ConflictError('Email already in use');
-  }
+  if (existing) throw new ConflictError('Email already in use');
 
   const hashed = await hashPassword(dto.password);
 
@@ -113,10 +107,7 @@ export const merchantRegister = async (dto: MerchantRegisterDto) => {
 
 export const clientRegister = async (dto: ClientRegisterDto) => {
   const existing = await authRepository.findUserByEmail(dto.email);
-  if (existing) {
-    logger.warn({ email: dto.email, isVerified: existing.isVerified }, 'clientRegister: email already in use');
-    throw new ConflictError('Email already in use');
-  }
+  if (existing) throw new ConflictError('Email already in use');
 
   const hashed = await hashPassword(dto.password);
 
