@@ -50,7 +50,10 @@ const sendOtp = async (email: string): Promise<void> => {
   const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
   await authRepository.upsertOtp(email, code, expiresAt);
-  await sendMail(email, 'Your SNAG verification code', otpEmailTemplate(code, OTP_EXPIRY_MINUTES));
+
+  // Fire-and-forget: don't let a slow/unreachable SMTP server hang the request.
+  sendMail(email, 'Your SNAG verification code', otpEmailTemplate(code, OTP_EXPIRY_MINUTES))
+    .catch((err) => logger.error({ email, err }, 'sendOtp: failed to send OTP email'));
 };
 
 const sendPasswordResetOtp = async (email: string): Promise<void> => {
@@ -58,7 +61,10 @@ const sendPasswordResetOtp = async (email: string): Promise<void> => {
   const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
   await authRepository.upsertOtp(email, code, expiresAt);
-  await sendMail(email, 'Reset your SNAG password', passwordResetEmailTemplate(code, OTP_EXPIRY_MINUTES));
+
+  // Fire-and-forget: don't let a slow/unreachable SMTP server hang the request.
+  sendMail(email, 'Reset your SNAG password', passwordResetEmailTemplate(code, OTP_EXPIRY_MINUTES))
+    .catch((err) => logger.error({ email, err }, 'sendPasswordResetOtp: failed to send reset email'));
 };
 
 // ── Merchant Auth ─────────────────────────────────────────────────────────────
