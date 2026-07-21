@@ -50,7 +50,7 @@ export const auditLog = (action: string, resource: string) => {
 export const auditLogin = async (req: Request, userId?: string, success: boolean = true) => {
   try {
     await auditService.createAuditLog({
-      userId: userId || 'anonymous',
+      userId,
       action: success ? 'LOGIN_SUCCESS' : 'LOGIN_FAILED',
       resource: 'auth',
       details: {

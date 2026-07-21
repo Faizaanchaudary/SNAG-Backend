@@ -57,7 +57,7 @@ export const findAuditLogsWithFilters = async (params: {
  * Create audit log entry
  */
 export const createAuditLog = async (data: {
-  userId: string;
+  userId?: string;
   action: string;
   resource: string;
   resourceId?: string;
